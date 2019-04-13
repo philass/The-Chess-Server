@@ -1,2 +1,2 @@
 ChessGame: ChessGame.cpp
-	g++ ChessGame.cpp -w -o ChessGame
+	g++ -std=c++11 ChessGame.cpp -o ChessGame

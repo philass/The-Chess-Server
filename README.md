@@ -1,3 +1,13 @@
 # The Chess Server
 
 In this project I build a chess server with C++
+
+
+### Task List
+
+- [x] Create ChessGame Class
+- [ ] Sexify ChessGame.cpp
+- [ ] Write Tests for ChessGame.cpp
+- [ ] Create ChessGame.h file
+- [ ] Implement Server
+

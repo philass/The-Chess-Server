@@ -12,7 +12,7 @@ In this project I build a chess server with C++
 - [ ] Implement Server
 - [ ] Implement en passant
 - [ ] Implement Castling
-- [ ] Implement inCheck
+- [x] Implement inCheck
 - [ ] Implement Game over
 - [ ] Queening
 

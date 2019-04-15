@@ -1,12 +1,19 @@
+/*
+This Class Emulates a Chess game in the terminal
+*/
+
 #include <iomanip>
 #include <iostream>
 #include <cmath>
 #include <vector>
+
 class ChessGame 
 {
   private:
-    bool whiteTurn; // True means Whites turn
-    bool gameOn;// True means game is not over
+    bool whiteTurn;   // True means Whites turn
+    bool gameOn;      // True means game is not over
+    
+    // Initial Board
     std::vector<std::vector<int>> boardState =
       {{-1, -2, -3, -4, -5, -3, -2, -1},
        {-6, -6, -6, -6, -6, -6, -6, -6}, 
@@ -18,8 +25,10 @@ class ChessGame
         {1,  2,  3,  4,  5,  3,  2,  1}}; 
     
 
-
-    bool canMoveDiag(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board) {
+    // Test whether a diagonal move from coordinates (rowFrom, ColFrom) -> (rowTo, colTo) on the board
+    // is a legal move.
+    bool canMoveDiag(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board)
+    {
       if (rowTo < 0 || colTo < 0 || rowTo > 7 || colTo > 7) {
         return false;
       }
@@ -47,7 +56,11 @@ class ChessGame
         return !inCheck(copy);
       }
     }
-    bool canMoveStraight(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board) {
+    
+    // Test whether a straight move from coordinates (rowFrom, ColFrom) -> (rowTo, colTo) on the board
+    // is a legal move.
+    bool canMoveStraight(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board) 
+    {
       if (rowTo < 0 || colTo < 0 || rowTo > 7 || colTo > 7) {
         return false;
       }
@@ -85,18 +98,25 @@ class ChessGame
       }
 
     }
+    
+    
+    // Checks if boardState is in check 
     bool inCheck(std::vector<std::vector<int>> boardState) 
     {
       return false;
     }
-    bool canMovePawn(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board) {
+
+    // Test whether a pawn move from coordinates (rowFrom, ColFrom) -> (rowTo, colTo) on the board is legal
+    bool canMovePawn(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board) 
+    {
       if (rowTo < 0 || colTo < 0 || rowTo > 7 || colTo > 7) {
         return false;
       }
       bool isPossibleMove = false;
       if (colTo == colFrom && rowTo == rowFrom - 1 && board[rowTo][colTo] == 0) {
         isPossibleMove = true;
-      } else if (colTo == colFrom && rowTo == rowFrom - 2 && rowFrom == 6 && board[rowTo - 1][colTo] == 0 && board[rowTo][colTo] == 0) {
+      } else if (colTo == colFrom && rowTo == rowFrom - 2 && rowFrom == 6 
+                    && board[rowTo - 1][colTo] == 0 && board[rowTo][colTo] == 0) {
         isPossibleMove = true;
       } else if (std::abs(colTo - colFrom) == 1 && rowFrom == rowTo + 1 && board[rowTo][colTo] < 0) {
         isPossibleMove = true;
@@ -111,6 +131,7 @@ class ChessGame
       }
     }
     
+    // Test whether a King move from coordinates (rowFrom, ColFrom) -> (rowTo, colTo) on the board is legal
     bool canMoveKing(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board)
     {
       int colDif = std::abs(colFrom - colTo); 
@@ -119,10 +140,15 @@ class ChessGame
       bool canMove = canMoveStraight(rowFrom, colFrom, rowTo, colTo, board) || 
         canMoveStraight(rowFrom, colFrom, rowTo, colTo, board);
     }
+    
+    // Test whether a Queen move from coordinates (rowFrom, ColFrom) -> (rowTo, colTo) on the board is legal
     bool canMoveQueen(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board)
     {
       return canMoveStraight(rowFrom, colFrom, rowTo, colTo, board) || canMoveStraight(rowFrom, colFrom, rowTo, colTo, board);
     }
+    
+    
+    // Test whether a Knight move from coordinates (rowFrom, ColFrom) -> (rowTo, colTo) on the board is legal
     bool canMoveKnight(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board) {
       int colDif = std::abs(colFrom - colTo);
       int rowDif = std::abs(rowFrom - rowTo);
@@ -142,10 +168,14 @@ class ChessGame
       }
 
     }
+    
+    // Test whether a Bishop move from coordinates (rowFrom, ColFrom) -> (rowTo, colTo) on the board is legal
     bool canMoveBishop(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board)
     {
       return canMoveStraight(rowFrom, colFrom, rowTo, colTo, board);
     }
+    
+    // Test whether a Rook move from coordinates (rowFrom, ColFrom) -> (rowTo, colTo) on the board is legal
     bool canMoveRook(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board)
     {
       return canMoveStraight(rowFrom, colFrom, rowTo, colTo, board);
@@ -155,6 +185,7 @@ class ChessGame
   public:
     ChessGame(): whiteTurn(true), gameOn(true) {}
   
+    // Print the current state of the board
     void printBoard() {
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
@@ -165,6 +196,8 @@ class ChessGame
         std::cout << "\n";
       }
     }
+    
+    //Translate the Black pieces to have white orientation
     std::vector<std::vector<int>> blackBoard() {
       std::vector<std::vector<int>> copy = boardState;
       for (int i = 0; i < 8; i++) {
@@ -173,8 +206,11 @@ class ChessGame
         }
       }
       return copy;
-      
     }
+
+
+
+    // Make move from coordinates (rowFrom, colFrom) -> (rowTo, colTo) if move is legal
     void move(int rowFrom, int colFrom, int rowTo, int colTo)
     {
       int piece = boardState[rowFrom][colFrom];
@@ -184,25 +220,24 @@ class ChessGame
       int uRowFrom = whiteTurn ? rowFrom : 7 - rowFrom; 
 
       std::vector<std::vector<int>> board = whiteTurn ? boardState : blackBoard();
-      if (piece == 0 || !correctColor) {
+      int uPiece = board[uRowFrom][colFrom];
+      if (uPiece == 0 || !correctColor) {
         std::cout << "Illegal Move" << std::endl;   
         legal = false;
-      } else if (piece == 1) {
+      } else if (uPiece == 1) {
         legal = canMoveRook(uRowFrom, colFrom, uRowTo, colTo, board);  
-      } else if (piece == 2) {
+      } else if (uPiece == 2) {
         legal = canMoveKnight(uRowFrom, colFrom, uRowTo, colTo, board);
-      } else if (piece == 3) {
+      } else if (uPiece == 3) {
         legal = canMoveBishop(uRowFrom, colFrom, uRowTo, colTo, board);
-      } else if (piece == 4) {
+      } else if (uPiece == 4) {
         legal = canMoveQueen(uRowFrom, colFrom, uRowTo, colTo, board);
-      } else if (piece == 5) {
+      } else if (uPiece == 5) {
         legal = canMoveKing(uRowFrom, colFrom, uRowTo, colTo, board);
-      } else if (piece == 6) {
+      } else if (uPiece == 6) {
         legal = canMovePawn(uRowFrom, colFrom, uRowTo, colTo, board);
       }
 
-      // Need case for ampersant pond
-      // Need cases for black pieces
       if (legal) {
         boardState[rowFrom][colFrom] = 0;
         boardState[rowTo][colTo] = piece;
@@ -217,6 +252,7 @@ int main()
 {
   ChessGame c;
   c.printBoard();
+  // Repeatdly ask for moves
   while(true) {
     int rowFrom;
     std::cout << "Row From : ";

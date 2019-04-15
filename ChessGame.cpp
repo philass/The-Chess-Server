@@ -6,6 +6,8 @@ This Class Emulates a Chess game in the terminal
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <string>
+#include <utility>
 
 class ChessGame 
 {
@@ -40,7 +42,7 @@ class ChessGame
       int deltaRow = rowTo > rowFrom ? 1 : -1;
       int currentRow = rowFrom;
       int currentCol = colFrom;
-      while (currentRow != rowTo) {
+      while (currentRow != rowTo - deltaRow) {
         currentRow += deltaRow;
         currentCol += deltaCol;
         if (board[currentRow][currentCol] != 0) {
@@ -96,9 +98,9 @@ class ChessGame
           return !inCheck(copy);
         }
       }
+      return false;
 
     }
-    
     
     // Checks if boardState is in check 
     bool inCheck(std::vector<std::vector<int>> boardState) 
@@ -136,15 +138,16 @@ class ChessGame
     {
       int colDif = std::abs(colFrom - colTo); 
       int rowDif = std::abs(rowFrom - rowTo); 
-      bool withinOneSquare = colDif + rowDif > 0 && colDif < 2 && rowDif < 2;
+      bool withinOneSquare = (colDif + rowDif > 0) && (colDif < 2) && (rowDif < 2);
       bool canMove = canMoveStraight(rowFrom, colFrom, rowTo, colTo, board) || 
-        canMoveStraight(rowFrom, colFrom, rowTo, colTo, board);
+        canMoveDiag(rowFrom, colFrom, rowTo, colTo, board);
+      return withinOneSquare && canMove;
     }
     
     // Test whether a Queen move from coordinates (rowFrom, ColFrom) -> (rowTo, colTo) on the board is legal
     bool canMoveQueen(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board)
     {
-      return canMoveStraight(rowFrom, colFrom, rowTo, colTo, board) || canMoveStraight(rowFrom, colFrom, rowTo, colTo, board);
+      return canMoveStraight(rowFrom, colFrom, rowTo, colTo, board) || canMoveDiag(rowFrom, colFrom, rowTo, colTo, board);
     }
     
     
@@ -172,7 +175,7 @@ class ChessGame
     // Test whether a Bishop move from coordinates (rowFrom, ColFrom) -> (rowTo, colTo) on the board is legal
     bool canMoveBishop(int rowFrom, int colFrom, int rowTo, int colTo, std::vector<std::vector<int>> board)
     {
-      return canMoveStraight(rowFrom, colFrom, rowTo, colTo, board);
+      return canMoveDiag(rowFrom, colFrom, rowTo, colTo, board);
     }
     
     // Test whether a Rook move from coordinates (rowFrom, ColFrom) -> (rowTo, colTo) on the board is legal
@@ -181,13 +184,21 @@ class ChessGame
       return canMoveStraight(rowFrom, colFrom, rowTo, colTo, board);
     }
     
-  
   public:
     ChessGame(): whiteTurn(true), gameOn(true) {}
+  
+    std::pair<int, int> getCoords(std::string location) {
+       std::string cols = "ABCDEFGH";
+       int column = cols.find(location[0]);
+       std::string rows = "87654321";
+       int row = rows.find(location[1]);
+       return std::make_pair(row, column);
+    }
   
     // Print the current state of the board
     void printBoard() {
       for (int i = 0; i < 8; i++) {
+        std::cout << 8 - i << std::setw(6);
         for (int j = 0; j < 8; j++) {
           std::cout << boardState[i][j] << std::setw(4);
         }
@@ -195,8 +206,20 @@ class ChessGame
         std::cout << "\n";
         std::cout << "\n";
       }
+      std::cout << " " << std::setw(6);
+      char col[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
+      for (int i = 0; i < 8; i++) {
+        std::cout << col[i] << std::setw(4);
+      }
+      std::cout << "\n";
+      std::cout << "\n";
+      std::cout << "\n";
     }
-    
+   
+    bool isWhiteTurn() {
+      return whiteTurn;
+    }
+
     //Translate the Black pieces to have white orientation
     std::vector<std::vector<int>> blackBoard() {
       std::vector<std::vector<int>> copy = boardState;
@@ -222,7 +245,6 @@ class ChessGame
       std::vector<std::vector<int>> board = whiteTurn ? boardState : blackBoard();
       int uPiece = board[uRowFrom][colFrom];
       if (uPiece == 0 || !correctColor) {
-        std::cout << "Illegal Move" << std::endl;   
         legal = false;
       } else if (uPiece == 1) {
         legal = canMoveRook(uRowFrom, colFrom, uRowTo, colTo, board);  
@@ -242,6 +264,8 @@ class ChessGame
         boardState[rowFrom][colFrom] = 0;
         boardState[rowTo][colTo] = piece;
         whiteTurn = !whiteTurn;
+      } else {
+        std::cout << "Illegal Move" << std::endl;   
       }
       std::cout << "The piece selected is " << piece << std::endl;
       std::cout << "col : " << colFrom << " | row : " << rowFrom << std::endl;
@@ -253,7 +277,9 @@ int main()
   ChessGame c;
   c.printBoard();
   // Repeatdly ask for moves
+  /*
   while(true) {
+    std::cout << "It is " << (c.isWhiteTurn() ? "white" : "black") << "'s turn!" << std::endl;
     int rowFrom;
     std::cout << "Row From : ";
     std::cin >> rowFrom;
@@ -269,5 +295,24 @@ int main()
     c.move(rowFrom, colFrom, rowTo, colTo);
     c.printBoard();
   }
+  */
+  while (true) {
+    std::cout << "It is " << (c.isWhiteTurn() ? "white" : "black") << "'s turn!" << std::endl;
+    std::string squareFrom;
+    std::cout << "SquareFrom : ";
+    std::cin >> squareFrom;
+    std::string squareTo;
+    std::cout << "SquareTo : ";
+    std::cin >> squareTo;
+    std::pair<int, int> f = c.getCoords(squareFrom);
+    std::pair<int, int> t = c.getCoords(squareTo);
+    c.move(f.first, f.second, t.first, t.second);
+    c.printBoard();
+
+
+  }
+
 return 0;
 }
+      // Need case for ampersant pond
+      // Need cases for black pieces

@@ -302,11 +302,21 @@ class ChessGame
     }
   
     // Print the current state of the board
+
+    std::string intToPiece(int i) {
+      std::string p = "0rkbQKp";
+      if (i < 0) {
+        return p.substr(std::abs(i), 1).append("'");
+      } else {
+        return p.substr(i, 1);
+      }
+    }
+
     void printBoard() {
       for (int i = 0; i < 8; i++) {
         std::cout << 8 - i << std::setw(6);
         for (int j = 0; j < 8; j++) {
-          std::cout << boardState[i][j] << std::setw(4);
+          std::cout << intToPiece(boardState[i][j]) << std::setw(4);
         }
         std::cout << "\n";
         std::cout << "\n";

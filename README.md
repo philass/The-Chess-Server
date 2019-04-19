@@ -8,7 +8,7 @@ In this project I build a chess server with C++
 - [x] Create ChessGame Class
 - [ ] Sexify ChessGame.cpp
 - [ ] Write Tests for ChessGame.cpp
-- [ ] Create ChessGame.h file
+- [x] Create ChessGame.h file
 - [ ] Implement Server
 - [ ] Implement en passant
 - [ ] Implement Castling

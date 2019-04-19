@@ -1,12 +1,16 @@
 #include <netdb.h> 
+#include <unistd.h>
 #include <netinet/in.h> 
 #include <stdlib.h> 
 #include <string.h> 
 #include <sys/socket.h> 
 #include <sys/types.h> 
+#include <iostream>
+#include <sstream>
 #define MAX 80 
 #define PORT 8080 
 #include <cstdio>
+ #include <cstdlib>
 #define SA struct sockaddr 
 // Function designed for chat between client and server. 
 void func(int sockfd) 
@@ -42,8 +46,7 @@ void func(int sockfd)
 int main() 
 { 
     int sockfd, connfd, len; 
-    struct sockaddr_in servaddr, cli; 
-  
+    struct sockaddr_in servaddr, cli;  
     // socket create and verification 
     sockfd = socket(AF_INET, SOCK_STREAM, 0); 
     if (sockfd == -1) { 
@@ -77,7 +80,8 @@ int main()
     len = sizeof(cli); 
   
     // Accept the data packet from client and verification 
-    connfd = accept(sockfd, (SA*)&cli, &len); 
+    socklen_t ewf;
+    connfd = std::accept(sockfd, (SA*)&cli, &len); 
     if (connfd < 0) { 
         printf("server acccept failed...\n"); 
         exit(0); 

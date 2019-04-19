@@ -14,4 +14,4 @@ server: server.c
 	gcc server.c -o server
 
 clean: 
-	rm server client ChessGame *.o
+	rm -f main server client ChessGame *.o

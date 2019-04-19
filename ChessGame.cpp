@@ -8,7 +8,6 @@ This Class Emulates a Chess game in the terminal
 #include <vector>
 #include <string>
 #include <utility>
-
 class ChessGame 
 {
   private:

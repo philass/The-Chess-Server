@@ -388,27 +388,3 @@ This Class Emulates a Chess game in the terminal
       std::cout << "The piece selected is " << piece << std::endl;
       std::cout << "col : " << colFrom << " | row : " << rowFrom << std::endl;
     }
-/*
-int main() 
-{
-  ChessGame c;
-  c.printBoard();
-  while (true) {
-    std::cout << "It is " << (c.isWhiteTurn() ? "white" : "black") << "'s turn!" << std::endl;
-    std::string squareFrom;
-    std::cout << "SquareFrom : ";
-    std::cin > > squareFrom;
-    std::string squareTo;
-    std::cout << "SquareTo : ";
-    std::cin > > squareTo;
-    std::pair<int, int> f = c.getCoords(squareFrom);
-    std::pair<int, int> t = c.getCoords(squareTo);
-    c.move(f.first, f.second, t.first, t.second);
-    c.printBoard();
-
-
-  }
-
-return 0;
-}
-*/

@@ -11,6 +11,9 @@
 #include <cstdio>
 #define SA struct sockaddr 
 // Function designed for chat between client and server. 
+
+#include "ChessGame.h"
+
 void func(int sockfd) 
 { 
     char buff[MAX]; 
@@ -43,6 +46,8 @@ void func(int sockfd)
 // Driver function 
 int main() 
 { 
+    ChessGame c;
+    c.printBoard();
     int sockfd, connfd, len; 
     struct sockaddr_in servaddr, cli; 
   
@@ -79,8 +84,8 @@ int main()
     len = sizeof(cli); 
   
     // Accept the data packet from client and verification 
-    socklen_t ef;
-    connfd = accept(sockfd, (SA*)&cli, &ef); 
+    socklen_t socklen;
+    connfd = accept(sockfd, (SA*)&cli, &socklen); 
     if (connfd < 0) { 
         printf("server acccept failed...\n"); 
         exit(0); 
